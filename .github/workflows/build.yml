@@ -20,7 +20,7 @@ jobs:  # jobs 顶级键，包含所有 job
     - name: Install build dependencies  # 安装构建依赖
       run: |
         apt-get update
-        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool
+        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool glibc-static
 
     - name: Build LUA (static)  # 构建 LUA 
       run: |
@@ -93,7 +93,7 @@ jobs:  # jobs 顶级键，包含所有 job
              USE_TFO=1 USE_LINUX_TPROXY=1 USE_GETADDRINFO=1 USE_PROMEX=1 USE_SLZ=1 \
              USE_PCRE2=1 USE_PCRE2_JIT=1 USE_STATIC_PCRE2=1 PCRE2_INC=/opt/pcre2-static/include PCRE2_LIB=/opt/pcre2-static/lib \
              USE_THREAD=1 \
-             -j$(nproc --ignore=2)
+             -j1 V=s
         cd ..
 
     - name: Prepare and upload binary artifact  # 上传二进制 artifact
