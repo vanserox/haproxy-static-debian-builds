@@ -18,7 +18,7 @@ jobs:  # jobs 顶级键，包含所有 job
 
     - name: Install build dependencies  # 安装构建依赖
       run: |
-        apk add --no-cache ca-certificates jemalloc build-deps gcc libc-dev linux-headers make tar curl shadow cmake git wget perl autoconf automake m4 libtool
+        apk add --no-cache ca-certificates jemalloc gcc libc-dev linux-headers make tar curl shadow cmake git wget perl autoconf automake m4 libtool
     
     - name: Build LUA (static)  # 构建 LUA 
       run: |
