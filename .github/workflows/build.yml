@@ -20,7 +20,7 @@ jobs:  # jobs 顶级键，包含所有 job
     - name: Install build dependencies  # 安装构建依赖
       run: |
         apt-get update
-        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool glibc-static
+        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool
 
     - name: Build LUA (static)  # 构建 LUA 
       run: |
@@ -85,7 +85,7 @@ jobs:  # jobs 顶级键，包含所有 job
         tar xzf haproxy-${HAPROXY_VERSION}.tar.gz
         cd haproxy-${HAPROXY_VERSION}
         export CC="gcc"
-        export LDFLAGS="-static -L/opt/openssl-static/lib -L/opt/pcre2-static/lib -lssl -lcrypto -lc -ldl -Wl,-static -static -static-libgcc -s"  # 添加 -ldl 依赖
+        export LDFLAGS="-static -L/opt/openssl-static/lib -L/opt/pcre2-static/lib -lssl -lcrypto -lc -ldl -static -static-libgcc -s"  # 添加 -ldl 依赖
         make TARGET=linux-glibc \
              ADDLIB="-ljemalloc $(jemalloc-config --libs)" \
              USE_OPENSSL=1 SSL_INC=/opt/openssl-static/include SSL_LIB=/opt/openssl-static/lib \
