@@ -34,7 +34,7 @@ jobs:  # jobs 顶级键，包含所有 job
       run: |
         git clone -j "$(nproc)" --no-tags --shallow-submodules --recurse-submodules --depth 1 --single-branch 'https://github.com/jemalloc/jemalloc.git'
         cd jemalloc
-        ./autogen.sh --prefix=/usr --disable-shared --enable-static
+        ./autogen.sh --prefix=/usr --enable-shared --disable-static
         make -j$(nproc)
         make install
         cd ..
