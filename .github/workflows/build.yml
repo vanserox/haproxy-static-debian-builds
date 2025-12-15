@@ -1,4 +1,4 @@
-name: Build Static HAProxy for Debian  # 工作流名称
+name: Build Static Universal HAProxy  # 工作流名称
 
 on:  # 触发条件
   push:
