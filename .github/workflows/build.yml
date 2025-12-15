@@ -86,10 +86,9 @@ jobs:  # jobs 顶级键，包含所有 job
         cd haproxy-${HAPROXY_VERSION}
         export CC="gcc"
         make TARGET=linux-glibc \
-             CFLAGS="-static" \
-             CXXFLAGS="-static" \
-             ADDLIB="-ljemalloc $(jemalloc-config --libs)" \
-             LDFLAGS="-static -L/opt/openssl-static/lib -L/opt/pcre2-static/lib -lssl -lcrypto -lc -lm -lcrypt -ldl -static-libgcc -s"
+             CFLAGS="-O2 -static" \
+             CXXFLAGS="-O2 -static" \
+             LDFLAGS="-static -L/opt/openssl-static/lib -L/opt/pcre2-static/lib -static-libstdc++ -static-libgcc -Wl,-Bstatic -lssl -lcrypto -lc -lm -ldl -s -Wl,-Bdynamic -ljemalloc"
              USE_OPENSSL=1 SSL_INC=/opt/openssl-static/include SSL_LIB=/opt/openssl-static/lib \
              USE_LUA=1 LUA_INC=/usr/local/include LUA_LIB=/usr/local/lib LUA_LIB_NAME=lua \
              USE_TFO=1 USE_LINUX_TPROXY=1 USE_GETADDRINFO=1 USE_PROMEX=1 USE_SLZ=1 \
