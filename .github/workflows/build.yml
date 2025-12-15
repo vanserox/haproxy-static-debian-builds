@@ -20,7 +20,7 @@ jobs:  # jobs 顶级键，包含所有 job
     - name: Install build dependencies  # 安装构建依赖
       run: |
         apt-get update
-        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool
+        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool cmake
 
     - name: Build LUA (static)  # 构建 LUA 
       run: |
@@ -41,31 +41,18 @@ jobs:  # jobs 顶级键，包含所有 job
         make install
         cd ..
 
-    - name: Build OpenSSL (static)  # 静态构建 OpenSSL
+    - name: Build AWS-LC (static)  # 静态构建 AWS-LC
       run: |
-        OPENSSL_VERSION=3.5.4
-        wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz
-        tar xzf openssl-${OPENSSL_VERSION}.tar.gz
-        cd openssl-${OPENSSL_VERSION}
-        mkdir -p /opt/openssl-static/lib  # 创建 lib 子目录
-        ./config --prefix=/opt/openssl-static no-shared  # 仅 no-shared
-        make -j$(nproc --ignore=2)
-        make install  # 完整 install
-        # 手动复制静态库到 lib 目录
-        cp libssl.a /opt/openssl-static/lib/
-        cp libcrypto.a /opt/openssl-static/lib/
+        AWSLC_URL=https://github.com/aws/aws-lc.git
+        AWSLC_TAG v1.66.0
+        git clone --depth 1 --branch "${AWSLC_TAG}" "${AWSLC_URL}"
+        cd asw-lc
+        mkdir build
+        cd build
+        cmake -DCMAKE_BUILD_TYPE=Release -DDISABLE_GO=1 -DDISABLE_PERL=1 -DBUILD_TESTING=0 -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX=/opt/awslc/ ..
+        make -j$(nproc)
+        make install
         cd ..
-
-    - name: Verify OpenSSL libraries  # 验证 OpenSSL 静态库存在
-      run: |
-        echo "检查 OpenSSL 静态库文件："
-        ls -la /opt/openssl-static/lib/libssl* /opt/openssl-static/lib/libcrypto*
-        if [ ! -f /opt/openssl-static/lib/libssl.a ] || [ ! -f /opt/openssl-static/lib/libcrypto.a ]; then
-          echo "错误：静态库未找到！"
-          exit 1
-        else
-          echo "静态库验证成功。"
-        fi
 
     - name: Build PCRE2 (static)  # 静态构建 PCRE2
       run: |
@@ -89,7 +76,7 @@ jobs:  # jobs 顶级键，包含所有 job
              CFLAGS="-O2 -static" \
              CXXFLAGS="-O2 -static" \
              LDFLAGS="-static -L/opt/openssl-static/lib -L/opt/pcre2-static/lib -lssl -lcrypto -s -ljemalloc"
-             USE_OPENSSL=1 SSL_INC=/opt/openssl-static/include SSL_LIB=/opt/openssl-static/lib \
+             USE_QUIC=1 USE_OPENSSL_AWSLC=1 SSL_INC=/opt/awslc/include SSL_LIB=/opt/awslc/lib64/ \
              USE_LUA=1 LUA_INC=/usr/local/include LUA_LIB=/usr/local/lib LUA_LIB_NAME=lua \
              USE_TFO=1 USE_LINUX_TPROXY=1 USE_GETADDRINFO=1 USE_PROMEX=1 USE_SLZ=1 \
              USE_PCRE2=1 USE_PCRE2_JIT=1 USE_STATIC_PCRE2=1 PCRE2_INC=/opt/pcre2-static/include PCRE2_LIB=/opt/pcre2-static/lib \
