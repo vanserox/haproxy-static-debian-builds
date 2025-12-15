@@ -20,7 +20,7 @@ jobs:  # jobs 顶级键，包含所有 job
     - name: Install build dependencies  # 安装构建依赖
       run: |
         apt-get update
-        apt-get install -y build-essential wget make tar perl git
+        apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool
 
     - name: Build LUA (static)  # 构建 LUA 
       run: |
