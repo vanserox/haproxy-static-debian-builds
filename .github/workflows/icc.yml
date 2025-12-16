@@ -26,7 +26,7 @@ jobs:  # jobs 顶级键，包含所有 job
         wget https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz
         tar xzf lua-${LUA_VERSION}.tar.gz
         cd lua-${LUA_VERSION}
-        echo -e "\nCC= icx -std=gnu99\nCFLAGS= -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal -Wall -Wextra -DLUA_COMPAT_5_3\nLDFLAGS= -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal\nAR= llvm-ar rcu\nRANLIB= llvm-ranlib" >> src/Makefile
+        echo "\nCC= icx -std=gnu99\nCFLAGS= -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal -Wall -Wextra -DLUA_COMPAT_5_3\nLDFLAGS= -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal\nAR= llvm-ar rcu\nRANLIB= llvm-ranlib" >> src/Makefile
         cat src/Makefile
         make -j$(nproc) all
         make install
