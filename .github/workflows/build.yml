@@ -69,6 +69,7 @@ jobs:  # jobs 顶级键，包含所有 job
         wget https://www.haproxy.org/download/3.3/src/haproxy-${HAPROXY_VERSION}.tar.gz
         tar xzf haproxy-${HAPROXY_VERSION}.tar.gz
         cd haproxy-${HAPROXY_VERSION}
+        sed -i "s#-Wl,-Bdynamic##g" Makefile
         export CC="gcc"
         make TARGET=linux-musl \
              CFLAGS="-O3" \
