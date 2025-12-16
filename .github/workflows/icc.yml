@@ -10,7 +10,7 @@ on:  # 触发条件
 jobs:  # jobs 顶级键，包含所有 job
   build-musl:
     runs-on: ubuntu-latest
-    container: intel/cpp-essentials:2025.1.3-0-devel-ubuntu24.04
+    container: intel/oneapi-basekit:2025.3.0-0-devel-ubuntu24.04
     steps:
     - name: Checkout repository  # 检出仓库代码
       uses: actions/checkout@v4
@@ -19,13 +19,6 @@ jobs:  # jobs 顶级键，包含所有 job
       run: |
         apt-get update
         apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool cmake
-        export CC=icc
-        export CXX=icpc
-        export LD=xild
-        export AR=xiar
-        export CFLAGS="-Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
-        export CXXFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
-        export LDFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
 
     - name: Build LUA (static)  # 构建 LUA 
       run: |
@@ -33,15 +26,17 @@ jobs:  # jobs 顶级键，包含所有 job
         wget https://www.lua.org/ftp/lua-${LUA_VERSION}.tar.gz
         tar xzf lua-${LUA_VERSION}.tar.gz
         cd lua-${LUA_VERSION}
-        CC=icc CXX=icpc LD=xild AR=xiar CFLAGS="-Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" CXXFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" LDFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" make -j$(nproc) all
-        CC=icc CXX=icpc LD=xild AR=xiar CFLAGS="-Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" CXXFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" LDFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" make install
+        echo -e "\nCC= icx -std=gnu99\nCFLAGS= -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal -Wall -Wextra -DLUA_COMPAT_5_3 $(SYSCFLAGS) $(MYCFLAGS)\nLDFLAGS= -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal  $(SYSLDFLAGS) $(MYLDFLAGS)\nAR= llvm-ar rcu\nRANLIB= llvm-ranlib" >> src/Makefile
+
+        make -j$(nproc) all
+        make install
         cd ..
   
     - name: Build jemalloc  # 构建 jemalloc 不支持静态 
       run: |
         git clone -j "$(nproc)" --no-tags --shallow-submodules --recurse-submodules --depth 1 --single-branch 'https://github.com/facebook/jemalloc.git'
         cd jemalloc
-        CC=icc CXX=icpc LD=xild AR=xiar CFLAGS="-Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" CXXFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" LDFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" ./autogen.sh --prefix=/usr --enable-shared --disable-static --disable-cxx
+        CC=icx CXX=icpx LD=icx AR=llvm-ar CFLAGS="-O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-fPIC -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" LDFLAGS="-fPIC -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -xCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" ./autogen.sh --prefix=/usr --enable-shared --disable-static
         make -j$(nproc)
         make install
         cd ..
