@@ -32,7 +32,7 @@ jobs:  # jobs 顶级键，包含所有 job
   
     - name: Build jemalloc  # 构建 jemalloc 不支持静态 
       run: |
-        git clone -j "$(nproc)" --no-tags --shallow-submodules --recurse-submodules --depth 1 --single-branch --branch master 'https://github.com/facebook/jemalloc.git'
+        git clone -j "$(nproc)" --no-tags --shallow-submodules --recurse-submodules --depth 1 --single-branch 'https://github.com/facebook/jemalloc.git'
         cd jemalloc
         LDFLAGS="-static" ./autogen.sh --prefix=/usr --disable-shared --enable-static --disable-cxx
         make -j$(nproc)
