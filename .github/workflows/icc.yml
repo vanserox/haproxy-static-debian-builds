@@ -20,7 +20,11 @@ jobs:  # jobs 顶级键，包含所有 job
       run: |
         apt-get update
         apt-get install -y build-essential wget make tar perl git autoconf automake m4 libtool cmake
-        export CC=icc CXX=icpc LD=xild AR=xiar CFLAGS="-Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
+        export CC=icc
+        export CXX=icpc
+        export LD=xild
+        export AR=xiar
+        export CFLAGS="-Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
         export CXXFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
         export LDFLAGS="-fPIC -Ofast -fbuiltin -ipo -parallel -use-intel-optimized-headers -xCORE-AVX2 -qopt-prefetch -qopt-prefetch-issue-excl-hint -qopt-calloc -qopt-dynamic-align -qopt-multi-version-aggressive -vec-guard-write -unroll-aggressive -tbb -ipp -mkl -daal" 
 
