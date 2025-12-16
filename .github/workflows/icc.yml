@@ -2,11 +2,10 @@ name: Build Static ICC HAProxy  # 工作流名称
 
 on:  # 触发条件
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-  release:
-    types: [ created ]
+    branches:
+      - main
+    paths:
+      - '**icc.yml'
 
 jobs:  # jobs 顶级键，包含所有 job
   build-musl:
