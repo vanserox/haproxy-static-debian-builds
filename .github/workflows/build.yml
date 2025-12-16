@@ -3,7 +3,7 @@ name: Build Static Universal HAProxy  # 工作流名称
 on:  # 触发条件
   push:
     branches:
-      - 'main/**'
+      - main
     paths:
       - '**build.yml'
 
