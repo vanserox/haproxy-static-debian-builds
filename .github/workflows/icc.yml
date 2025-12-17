@@ -29,7 +29,7 @@ jobs:  # jobs 顶级键，包含所有 job
         export PATH=/opt/intel/oneapi/compiler/latest/bin/compiler/:$PATH
         echo "\nCC= icx -std=gnu99\nCFLAGS= -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal -Wall -Wextra -DLUA_COMPAT_5_3\nLDFLAGS= -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal\nAR= llvm-ar rcu\nRANLIB= llvm-ranlib" >> src/Makefile
         cat src/Makefile
-        make -j$(nproc) all
+        make -j$(nproc) all V=1
         make install
         cd ..
   
@@ -38,8 +38,8 @@ jobs:  # jobs 顶级键，包含所有 job
         git clone -j "$(nproc)" --no-tags --shallow-submodules --recurse-submodules --depth 1 --single-branch 'https://github.com/facebook/jemalloc.git'
         cd jemalloc
         export PATH=/opt/intel/oneapi/compiler/latest/bin/compiler/:$PATH
-        CC=icx CXX=icpx LD=icx AR=llvm-ar CFLAGS="-fPIC -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-fPIC -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" LDFLAGS="-fPIC -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" ./autogen.sh --prefix=/usr --enable-shared --disable-static
-        make -j$(nproc)
+        CC=icx CXX=icpx LD=icx AR=llvm-ar RANLIB=llvm-ranlib CFLAGS="-fPIC -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-fPIC -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" LDFLAGS="-fPIC -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" ./autogen.sh --prefix=/usr --enable-shared --disable-static
+        make -j$(nproc) V=1
         make install
         cd ..
 
@@ -52,7 +52,7 @@ jobs:  # jobs 顶级键，包含所有 job
         mkdir build
         cd build
         export PATH=/opt/intel/oneapi/compiler/latest/bin/compiler/:$PATH
-        CC=icx CXX=icpx LD=icx AR=llvm-ar CFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" LDFLAGS="-static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" cmake -DCMAKE_BUILD_TYPE=Release -DDISABLE_GO=1 -DCMAKE_AR=/opt/intel/oneapi/compiler/latest/bin/compiler/llvm-ar -DDISABLE_PERL=1 -DBUILD_TESTING=0 -DCMAKE_RANLIB=/opt/intel/oneapi/compiler/latest/bin/compiler/llvm-ranlib -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX=/opt/awslc/ ..
+        CC=icx CXX=icpx LD=icx AR=llvm-ar RANLIB=llvm-ranlib CFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl" CXXFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl" LDFLAGS="-static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl" cmake -DCMAKE_BUILD_TYPE=Release -DDISABLE_GO=1 -DCMAKE_AR=/opt/intel/oneapi/compiler/latest/bin/compiler/llvm-ar -DDISABLE_PERL=1 -DBUILD_TESTING=0 -DCMAKE_RANLIB=/opt/intel/oneapi/compiler/latest/bin/compiler/llvm-ranlib -DBUILD_SHARED_LIBS=OFF -DBUILD_STATIC_LIBS=ON -DCMAKE_INSTALL_PREFIX=/opt/awslc/ ..
         make -j$(nproc)
         make install
         cd ..
@@ -64,7 +64,7 @@ jobs:  # jobs 顶级键，包含所有 job
         tar xzf pcre2-${PCRE2_VERSION}.tar.gz
         cd pcre2-${PCRE2_VERSION}
         export PATH=/opt/intel/oneapi/compiler/latest/bin/compiler/:$PATH
-        CC=icx CXX=icpx LD=icx AR=llvm-ar CFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" LDFLAGS="-static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" ./configure --prefix=/opt/pcre2-static --disable-shared --enable-static --enable-jit --enable-unicode
+        CC=icx CXX=icpx LD=icx AR=llvm-ar RANLIB=llvm-ranlib CFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" LDFLAGS="-static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" ./configure --prefix=/opt/pcre2-static --disable-shared --enable-static --enable-jit --enable-unicode
         make -j$(nproc --ignore=2)
         make install
         cd ..
@@ -77,7 +77,7 @@ jobs:  # jobs 顶级键，包含所有 job
         cd haproxy-${HAPROXY_VERSION}
         export PATH=/opt/intel/oneapi/compiler/latest/bin/compiler/:$PATH
         make TARGET=linux-musl \
-             CC=icx CXX=icpx LD=icx AR=llvm-ar CFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" \
+             CC=icx CXX=icpx LD=icx AR=llvm-ar RANLIB=llvm-ranlib CFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" CXXFLAGS="-O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal" \
              LDFLAGS="-fPIC -static-libgcc -static-intel -O3 -ffast-math -fbuiltin -ipo -axCORE-AVX2 -qopt-prefetch -qopt-dynamic-align -tbb -ipp -mkl -daal -Wl,-Bstatic -L/opt/awslc/lib -Wl,-rpath,/opt/awslc/lib -L/opt/pcre2-static/lib -s" \
              ADDLIB="-Wl,-Bdynamic -ljemalloc $(jemalloc-config --libs)" \
              USE_QUIC=1 USE_OPENSSL_AWSLC=1 SSL_INC=/opt/awslc/include SSL_LIB=/opt/awslc/lib64/ \
